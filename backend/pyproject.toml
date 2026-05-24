@@ -1,6 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "distributed-storage-platform"
+name = "novadrive"
 version = "0.1.0"
+description = "Distributed Storage Platform"
 requires-python = ">=3.12"
 
 dependencies = [
@@ -13,3 +18,6 @@ dependencies = [
     "pydantic-settings",
     "python-dotenv"
 ]
+
+[tool.setuptools.packages.find]
+include = ["app*"]

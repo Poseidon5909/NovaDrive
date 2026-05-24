@@ -4,7 +4,8 @@ services:
   backend:
     build:
       context: ./backend
-    container_name: dsp_backend
+      dockerfile: Dockerfile
+    container_name: novadrive_backend
     ports:
       - "8000:8000"
     env_file:
@@ -14,25 +15,25 @@ services:
     depends_on:
       - postgres
     networks:
-      - dsp_network
+      - novadrive_network
 
   postgres:
     image: postgres:16
-    container_name: dsp_postgres
+    container_name: novadrive_postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: dsp_db
+      POSTGRES_DB: novadrive_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - dsp_network
+      - novadrive_network
 
 volumes:
   postgres_data:
 
 networks:
-  dsp_network:
+  novadrive_network:
