@@ -7,4 +7,5 @@ pydantic
 pydantic-settings
 python-dotenv
 PyJWT
+python-jose[cryptography]
 email-validator

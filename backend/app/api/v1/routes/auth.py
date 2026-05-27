@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
 from app.repositories.user_repository import UserRepository
-from app.schemas.token import Token
+from app.schemas.auth import Token
 from app.schemas.user import (
     UserCreate,
     UserLogin,

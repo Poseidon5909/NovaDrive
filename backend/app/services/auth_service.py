@@ -1,67 +1,84 @@
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.repositories.user_repository import user_repository
+from app.schemas.auth import (
+    RegisterRequest,
+    TokenResponse,
+)
+from app.schemas.user import UserResponse
 from app.core.security import (
-    create_access_token,
     hash_password,
     verify_password,
+    create_access_token
 )
-from app.repositories.user_repository import UserRepository
+from app.core.exceptions import (
+    InvalidCredentialsException,
+    UserAlreadyExistsException,
+)
+from app.models.user import User
 
 
 class AuthService:
-    def __init__(
-        self,
-        user_repository: UserRepository,
-    ):
-        self.user_repository = user_repository
 
-    async def register(
+    async def register_user(
         self,
-        user_data,
-    ):
-        existing_user = await self.user_repository.get_by_email(
-            user_data.email
+        db: AsyncSession,
+        payload: RegisterRequest
+    ) -> User:
+
+        existing_user = await user_repository.get_by_email(
+            db,
+            payload.email
         )
 
         if existing_user:
-            raise Exception("User already exists")
+            raise UserAlreadyExistsException()
 
-        hashed_password = hash_password(
-            user_data.password
-        )
-
-        user = await self.user_repository.create(
+        user = await user_repository.create(
+            db,
             {
-                "username": user_data.username,
-                "email": user_data.email,
-                "hashed_password": hashed_password,
+                "email": payload.email,
+                "full_name": payload.full_name,
+                "hashed_password": hash_password(
+                    payload.password
+                )
             }
         )
 
         return user
 
-    async def login(
+    async def login_user(
         self,
-        user_data,
-    ):
-        user = await self.user_repository.get_by_email(
-            user_data.email
+        db: AsyncSession,
+        email: str,
+        password: str
+    ) -> TokenResponse:
+
+        user = await user_repository.get_by_email(
+            db,
+            email
         )
 
         if not user:
-            raise Exception("Invalid credentials")
+            raise InvalidCredentialsException()
 
         valid_password = verify_password(
-            user_data.password,
-            user.hashed_password,
+            password,
+            user.hashed_password
         )
 
         if not valid_password:
-            raise Exception("Invalid credentials")
+            raise InvalidCredentialsException()
 
         token = create_access_token(
-            {"sub": str(user.id)}
+            str(user.id)
         )
 
-        return {
-            "access_token": token,
-            "token_type": "bearer",
-        } 
+        return TokenResponse(
+            access_token=token,
+            token_type="bearer",
+            user=UserResponse.model_validate(user)
+        )
+
+
+auth_service = AuthService()

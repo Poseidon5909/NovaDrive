@@ -19,7 +19,8 @@ dependencies = [
     "python-dotenv",
     "PyJWT",
     "passlib[bcrypt]",
-    "email-validator"
+    "email-validator",
+    "python-jose[cryptography]"
 ]
 
 [tool.setuptools.packages.find]
