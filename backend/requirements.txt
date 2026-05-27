@@ -4,4 +4,7 @@ sqlalchemy>=2.0
 asyncpg
 alembic
 pydantic
+pydantic-settings
 python-dotenv
+PyJWT
+email-validator

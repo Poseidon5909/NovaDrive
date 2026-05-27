@@ -16,7 +16,10 @@ dependencies = [
     "alembic",
     "pydantic",
     "pydantic-settings",
-    "python-dotenv"
+    "python-dotenv",
+    "PyJWT",
+    "passlib[bcrypt]",
+    "email-validator"
 ]
 
 [tool.setuptools.packages.find]
