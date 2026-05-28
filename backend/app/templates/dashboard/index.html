@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <h1>NovaDrive Control Plane</h1>
+  <p class="muted">
+    Backend-focused dashboard for distributed uploads, storage pipelines, and
+    infrastructure insights.
+  </p>
+</section>
+
+<section class="grid">
+  <div class="panel">
+    <h2>Upload Pipeline</h2>
+    <p>Track multipart uploads, chunk assembly, and async processing.</p>
+  </div>
+  <div class="panel">
+    <h2>Storage Nodes</h2>
+    <p>Monitor capacity, replica health, and node placement strategy.</p>
+  </div>
+  <div class="panel">
+    <h2>Async Workers</h2>
+    <p>Review queue depth, retry rates, and background job health.</p>
+  </div>
+</section>
+
+<section class="panel subtle">
+  <div
+    id="health-status"
+    class="notice"
+    hx-get="/api/v1/health"
+    hx-trigger="load"
+    hx-swap="innerHTML"
+  >
+    Loading API health...
+  </div>
+</section>
+{% endblock %}

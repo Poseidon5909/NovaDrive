@@ -1,11 +1,6 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.repositories.user_repository import user_repository
-from app.schemas.auth import (
-    RegisterRequest,
-    TokenResponse,
-)
-from app.schemas.user import UserResponse
+from app.repositories.user_repository import UserRepository
+from app.schemas.auth import TokenResponse
+from app.schemas.user import UserCreate, UserLogin, UserResponse
 from app.core.security import (
     hash_password,
     verify_password,
@@ -19,26 +14,25 @@ from app.models.user import User
 
 
 class AuthService:
+    def __init__(self, repository: UserRepository):
+        self.repository = repository
 
-    async def register_user(
+    async def register(
         self,
-        db: AsyncSession,
-        payload: RegisterRequest
+        payload: UserCreate,
     ) -> User:
 
-        existing_user = await user_repository.get_by_email(
-            db,
+        existing_user = await self.repository.get_by_email(
             payload.email
         )
 
         if existing_user:
             raise UserAlreadyExistsException()
 
-        user = await user_repository.create(
-            db,
+        user = await self.repository.create(
             {
+                "username": payload.username,
                 "email": payload.email,
-                "full_name": payload.full_name,
                 "hashed_password": hash_password(
                     payload.password
                 )
@@ -47,24 +41,21 @@ class AuthService:
 
         return user
 
-    async def login_user(
+    async def login(
         self,
-        db: AsyncSession,
-        email: str,
-        password: str
+        payload: UserLogin,
     ) -> TokenResponse:
 
-        user = await user_repository.get_by_email(
-            db,
-            email
+        user = await self.repository.get_by_email(
+            payload.email
         )
 
         if not user:
             raise InvalidCredentialsException()
 
         valid_password = verify_password(
-            password,
-            user.hashed_password
+            payload.password,
+            user.hashed_password,
         )
 
         if not valid_password:
@@ -79,6 +70,3 @@ class AuthService:
             token_type="bearer",
             user=UserResponse.model_validate(user)
         )
-
-
-auth_service = AuthService()

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ page_title or "NovaDrive" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}" />
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script type="module" src="{{ url_for('static', path='js/app.js') }}"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">NovaDrive</div>
+      <nav class="nav">
+        <a href="/" class="nav-link">Dashboard</a>
+        <a href="/auth/login" class="nav-link">Sign in</a>
+        <a href="/auth/register" class="nav-link">Register</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <p>Backend-first distributed storage platform.</p>
+    </footer>
+  </body>
+</html>

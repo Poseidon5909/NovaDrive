@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+  <h1>Create account</h1>
+  <p class="muted" data-auth-target="status">Keep the UI minimal, keep the backend strong.</p>
+
+  <form class="stack" data-controller="auth" method="post" action="#">
+    <label class="field">
+      <span>Name</span>
+      <input type="text" name="name" placeholder="Nova Engineer" required />
+    </label>
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" name="email" placeholder="you@novadrive.io" required />
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input type="password" name="password" placeholder="Create a password" required />
+    </label>
+
+    <button class="btn" type="submit" disabled>Register (wiring pending)</button>
+  </form>
+</section>
+
+<section class="panel subtle">
+  <div
+    id="readiness-status"
+    class="notice"
+    hx-get="/api/v1/readiness"
+    hx-trigger="load"
+    hx-swap="innerHTML"
+  >
+    Loading readiness...
+  </div>
+</section>
+{% endblock %}

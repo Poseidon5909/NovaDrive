@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import Token
+from app.schemas.auth import TokenResponse
 from app.schemas.user import (
     UserCreate,
     UserLogin,
@@ -31,7 +31,7 @@ async def register(
 
 @router.post(
     "/login",
-    response_model=Token,
+    response_model=TokenResponse,
 )
 async def login(
     user_data: UserLogin,
